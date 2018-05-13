@@ -1,0 +1,10 @@
+<div class="row">
+    <div *ngFor="let userProfile of userProfiles" class="col">
+        <a (click)="onShowUserProfile(userProfile.login)">
+            <div class="text-center">
+                <img src="{{userProfile.avatar_url}}" class="rounded" width="100px">
+                <p>{{userProfile.login}}</p>
+            </div>
+        </a>
+    </div>
+</div>
