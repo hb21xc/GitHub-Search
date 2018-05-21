@@ -11,12 +11,12 @@
             "dom"
         ],
         "typeRoots": [
-			"node_modules/@types"
+            "node_modules/@types"
         ],
         "types": [
-			"node",
+            "node",
             "core-js"
-		]
+        ]
     },
     "exclude": [
         "dist"
