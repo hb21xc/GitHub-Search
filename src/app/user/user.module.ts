@@ -5,7 +5,7 @@ import { CommonModule } from "@angular/common";
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 
 import { UserSearchFormComponent } from "./user-search-form/user-search-form.component";
-import { UserListPlitViewComponent } from "./user-list-split-view/user-list-split-view.component";
+import { UserListSplitViewComponent } from "./user-list-split-view/user-list-split-view.component";
 import { UserListComponent } from "./user-list/user-list.component";
 import { UserProfileComponent } from "./user-profile/user-profile.component";
 import { UserProfileService } from "./services/user-profile.service";
@@ -15,7 +15,7 @@ import { DeviceService } from "./services/device.servive";
 @NgModule({
     declarations: [
         UserSearchFormComponent,
-        UserListPlitViewComponent,
+        UserListSplitViewComponent,
         UserListComponent,
         UserProfileComponent
     ],
@@ -31,7 +31,7 @@ import { DeviceService } from "./services/device.servive";
     ],
     exports: [
         UserSearchFormComponent,
-        UserListPlitViewComponent,
+        UserListSplitViewComponent,
         UserListComponent,
         UserProfileComponent
     ]
