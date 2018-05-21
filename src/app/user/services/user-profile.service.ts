@@ -46,7 +46,7 @@ export class UserProfileService {
         this.gitHubSerive.getUserProfiles(username, this.currentPageNo).subscribe((userList: any) => {
             this.currentPageNo++;
             this.userProfiles.push(...userList.items);
-            this.notifyUserListChanged(this.userProfiles);
+            this.notifyUserListChanged(userList.items);
         });
     }
 
@@ -54,7 +54,7 @@ export class UserProfileService {
         return this.username;
     }
 
-    getCachedUserProfiles() {
+    getCachedUserProfiles(): UserProfile[] {
         return this.userProfiles;
     }
 
