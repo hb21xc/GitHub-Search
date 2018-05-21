@@ -2,7 +2,7 @@
   "name": "github",
   "version": "1.0.0",
   "scripts": {
-    "start": "webpack-dev-server --config=config/webpack.dev.js",
+    "serve": "webpack-dev-server --config=config/webpack.dev.js",
     "build": "webpack --config=config/webpack.dev.js"
   },
   "dependencies": {
@@ -15,8 +15,11 @@
     "@angular/platform-browser": "^5.2.0",
     "@angular/platform-browser-dynamic": "^5.2.0",
     "@angular/router": "^5.2.0",
+    "@fortawesome/fontawesome": "^1.1.8",
+    "@fortawesome/fontawesome-free-solid": "^5.0.13",
     "bootstrap": "^4.1.1",
     "core-js": "^2.4.1",
+    "ngx-infinite-scroll": "^0.8.4",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^5.5.6",
     "zone.js": "^0.8.19"

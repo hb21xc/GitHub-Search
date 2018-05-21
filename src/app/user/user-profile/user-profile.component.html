@@ -1,19 +1,19 @@
-<div class="pl-4" *ngIf="userProfile">
+<div class="container-fluid" *ngIf="userProfile">
     <div class="row">
         <div class="col-md-4">
             <div class="text-center">
-                <img src="{{userProfile.avatar_url}}" class="rounded" width="150px">
+                <img src="{{userProfile?.avatar_url}}" class="rounded" width="150px">
             </div>
         </div>
         <div class="col-md-8">
-            <h3>{{userProfile.name}} ({{userProfile.login}})</h3>
-            <p>{{userProfile.company}}</p>
-            <p>{{userProfile.location}}</p>
+            <h3>{{userProfile?.name}} ({{userProfile?.login}})</h3>
+            <p>{{userProfile?.company}}</p>
+            <p>{{userProfile?.location}}</p>
             <p>
-                <a href="{{userProfile.blog}}">{{userProfile.blog}}</a>
+                <a href="{{userProfile?.blog}}">{{userProfile?.blog}}</a>
             </p>
             <p>
-                <a href="mailto:{{userProfile.email}}">{{userProfile.email}}</a>
+                <a href="mailto:{{userProfile?.email}}">{{userProfile?.email}}</a>
             </p>
         </div>
     </div>

@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FormGroup, NgForm } from "@angular/forms";
+import { FormGroup, NgForm, FormControl } from "@angular/forms";
 
 import { UserProfileService } from "../services/user-profile.service";
 
@@ -12,7 +12,12 @@ export class UserSearchFormComponent {
 
     constructor(private userProfileService: UserProfileService) { }
 
-    onSearch(username: string) {
+    onSearch(username: string): void {
         this.userProfileService.searchByUsername(username);
+    }
+
+    onClear(username: FormControl): void {
+        username.setValue("");
+        this.userProfileService.clear();
     }
 }

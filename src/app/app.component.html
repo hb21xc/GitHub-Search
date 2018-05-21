@@ -1,11 +1,2 @@
-<div class="container-fluid p-4">
-    <div class="row justify-content-center">
-        <div class="col-8 pb-4">
-            <user-search-form></user-search-form>
-        </div>
-    </div>
-    <div class="row pt-4 justify-content-center">
-        <user-list [ngClass]="{'decrease-width': decrease}" (profileClickedEvent)="onProfileClicked($event)"></user-list>
-        <user-profile [ngClass]="{'enlarge-width': decrease}"></user-profile>
-    </div>
-</div>
+<app-header></app-header>
+<app-content></app-content>

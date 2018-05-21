@@ -15,7 +15,7 @@
         ],
         "types": [
 			"node",
-			"core-js"
+            "core-js"
 		]
     },
     "exclude": [

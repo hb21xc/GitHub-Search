@@ -1,8 +1,9 @@
 <form #searchForm="ngForm" (ngSubmit)="onSearch(searchForm.value.username)">
     <div class="input-group">
-        <input type="text" class="form-control" placeholder="Enter GitHub username" name="username" ngModel>
-        <div class="input-group-prepend">
+        <input type="text" class="form-control"  autocomplete="off" placeholder="Enter username" name="username" ngModel>
+        <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="submit">Search</button>
+            <button class="btn btn-outline-secondary" (click)="onClear(searchForm.controls.username)">Clear</button>
         </div>
     </div>
-</form>
+</form> 

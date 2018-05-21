@@ -4,6 +4,8 @@ import { Subscription } from "rxjs/Subscription";
 
 import { UserProfileService } from "../services/user-profile.service";
 import { UserProfileDetails } from "../interfaces/user-profile-details.interface";
+import { HeaderService } from "../../services/header.service";
+import { RouterService } from "../../services/router.service";
 
 @Component({
     selector: "user-profile",
@@ -11,25 +13,42 @@ import { UserProfileDetails } from "../interfaces/user-profile-details.interface
     styles: ["user-profile.component.css"]
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
-    private userProfileSubscription: Subscription;
-    private userListSubscription: Subscription;
+    private userProfileChangedSubscription: Subscription;
+    private userListClearedSubscription: Subscription;
+    private headerTitle = "GitHub User Profile";
     userProfile: UserProfileDetails;
 
-    constructor(private userProfileService: UserProfileService) { }
+    constructor(
+        private userProfileService: UserProfileService,
+        private headerService: HeaderService,
+        private routerService: RouterService
+    ) { }
 
     ngOnInit() {
-        this.userProfileSubscription = this.userProfileService.userProfile$
-            .subscribe((userProfile: UserProfileDetails) => {
-                this.userProfile = userProfile;
-            });
-        this.userListSubscription = this.userProfileService.userList$
-            .subscribe(() => {
-                this.userProfile = null;
-            });
+        this.registerUserProfileChangedSubscription();
+        this.registerUserListClearedSubscription();
+
+        if (this.routerService.isProfilePageShown()) {
+            this.setHeaderTitle(this.headerTitle);
+        }
     }
 
     ngOnDestroy() {
-        this.userProfileSubscription.unsubscribe();
-        this.userListSubscription.unsubscribe();
+        this.userProfileChangedSubscription.unsubscribe();
+        this.userListClearedSubscription.unsubscribe();
+    }
+
+    registerUserProfileChangedSubscription(): void {
+        this.userProfileChangedSubscription = this.userProfileService.userProfileDetailsChanged$
+            .subscribe((userProfile: UserProfileDetails) => this.userProfile = userProfile);
+    }
+
+    registerUserListClearedSubscription(): void {
+        this.userListClearedSubscription = this.userProfileService.userListCleared$
+            .subscribe(() => this.userProfile = null);
+    }
+
+    setHeaderTitle(title: string): void {
+        this.headerService.setTitle(title);
     }
 }

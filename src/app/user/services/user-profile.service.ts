@@ -10,34 +10,71 @@ import { UserProfileDetails } from "../interfaces/user-profile-details.interface
 @Injectable()
 export class UserProfileService {
     private userListChanged: Subject<UserProfile[]>;
-    private userProfileChanged: Subject<UserProfileDetails>;
-    userList$: Observable<UserProfile[]>;
-    userProfile$: Observable<UserProfileDetails>;
+    private userListCleared: Subject<void>;
+    private userProfileDetailsChanged: Subject<UserProfileDetails>;
+    private userProfiles: UserProfile[];
+    private currentPageNo: number;
+    private username: string;
+    userListChanged$: Observable<UserProfile[]>;
+    userListCleared$: Observable<void>;
+    userProfileDetailsChanged$: Observable<UserProfileDetails>;
 
-    constructor(private gitHubSerive: GitHubService) { 
+    constructor(private gitHubSerive: GitHubService) {
         this.userListChanged = new Subject<UserProfile[]>();
-        this.userProfileChanged = new Subject<UserProfileDetails>();
-        this.userList$ = this.userListChanged.asObservable();
-        this.userProfile$ = this.userProfileChanged.asObservable();
+        this.userProfileDetailsChanged = new Subject<UserProfileDetails>();
+        this.userListCleared = new Subject<void>();
+        this.userListChanged$ = this.userListChanged.asObservable();
+        this.userListCleared$ = this.userListCleared.asObservable();
+        this.userProfileDetailsChanged$ = this.userProfileDetailsChanged.asObservable();
+        this.userProfiles = [];
+        this.currentPageNo = 1;
     }
 
     searchByUsername(username: string): void {
-        this.gitHubSerive.searchByUsername(username).subscribe((userList: any) => {
-            this.notifyUserListChanged(userList.items);
+        this.clear();
+        this.username = username;
+        this.getUserProfiles(username);
+    }
+
+    showUserProfile(username: string): void {
+        this.gitHubSerive.getUserProfileDetails(username).subscribe((userProfile: UserProfileDetails) => {
+            this.notifyUserProfileDetailsChanged(userProfile);
         });
     }
 
-    getUserProfile(username: string): void {
-        this.gitHubSerive.getUserProfile(username).subscribe((userProfile: UserProfileDetails) => {
-            this.notifyUserProfileChanged(userProfile);
+    getUserProfiles(username: string) {
+        this.gitHubSerive.getUserProfiles(username, this.currentPageNo).subscribe((userList: any) => {
+            this.currentPageNo++;
+            this.userProfiles.push(...userList.items);
+            this.notifyUserListChanged(this.userProfiles);
         });
+    }
+
+    getUsername(): string {
+        return this.username;
+    }
+
+    getCachedUserProfiles() {
+        return this.userProfiles;
+    }
+
+    clear(): void {
+        this.userProfiles = [];
+        this.currentPageNo = 1;
+        this.username = null;
+        this.notifyUserListCleared();
+        this.notifyUserProfileDetailsChanged(null);
     }
 
     notifyUserListChanged(userList: UserProfile[]): void {
         this.userListChanged.next(userList);
     }
 
-    notifyUserProfileChanged(userProfile: UserProfileDetails): void {
-        this.userProfileChanged.next(userProfile);
+    notifyUserListCleared(): void {
+        this.userListCleared.next();
+    }
+
+    notifyUserProfileDetailsChanged(userProfileDetails: UserProfileDetails): void {
+        this.userProfileDetailsChanged.next(userProfileDetails);
     }
 }

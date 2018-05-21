@@ -1,9 +1,12 @@
-import { Component, EventEmitter, OnInit, OnDestroy, Output } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 
 import { Subscription } from "rxjs/Subscription";
 
 import { UserProfileService } from "../services/user-profile.service";
 import { UserProfile } from "../interfaces/user-profile.interface";
+import { HeaderService } from "../../services/header.service";
+import { RouterService } from "../../services/router.service";
+import { DeviceService } from "../services/device.servive";
 
 @Component({
     selector: "user-list",
@@ -11,32 +14,63 @@ import { UserProfile } from "../interfaces/user-profile.interface";
     styles: ["user-list.component.css"]
 })
 export class UserListComponent implements OnInit, OnDestroy {
-    private userListSubscription: Subscription;
+    private userListChangedSubscription: Subscription;
+    private userListClearedSubscription: Subscription;
+    private headerTitle = "GitHub Search";
     userProfiles: UserProfile[];
-    @Output() profileClickedEvent = new EventEmitter();
-    profileClicked = false;
 
-    constructor(private userProfileService: UserProfileService) { }
+    constructor(
+        private userProfileService: UserProfileService,
+        private routerService: RouterService,
+        private headerService: HeaderService,
+        private deviceService: DeviceService
+    ) {
+        this.userProfiles = [];
+    }
 
     ngOnInit() {
-        this.userListSubscription = this.userProfileService.userList$
-            .subscribe((userProfiles: UserProfile[]) => {
-                this.userProfiles = userProfiles;
-                this.sendEvent(false);
-            });
+        this.registerUserListChangedSubscription();
+        this.registerUserListClearedSubscription();
+        this.setHeaderTitle(this.headerTitle);
+        this.loadCachedUserProfiles();
     }
 
     ngOnDestroy() {
-        this.userListSubscription.unsubscribe();
+        this.userListChangedSubscription.unsubscribe();
     }
 
-    sendEvent(status) {
-        this.profileClicked = status;
-        this.profileClickedEvent.emit(this.profileClicked);
+    registerUserListChangedSubscription(): void {
+        this.userListChangedSubscription = this.userProfileService.userListChanged$
+            .subscribe((userProfiles: UserProfile[]) => this.userProfiles.push(...userProfiles));
+    }
+
+    registerUserListClearedSubscription(): void {
+        this.userListClearedSubscription = this.userProfileService.userListCleared$
+            .subscribe(() => this.userProfiles = []);
+    }
+
+    setHeaderTitle(title: string): void {
+        this.headerService.setTitle(title);
+    }
+
+    loadCachedUserProfiles() {
+        const cachedUserProfiles = this.userProfileService.getCachedUserProfiles();
+        if (cachedUserProfiles) {
+            this.userProfiles.push(...cachedUserProfiles);
+        }
     }
 
     onShowUserProfile(username: string): void {
-        this.sendEvent(true);
-        this.userProfileService.getUserProfile(username);
+        if (this.deviceService.isSmartphone()) {
+            this.routerService.goToProfilePage();
+        }
+        this.userProfileService.showUserProfile(username);
+    }
+
+    onGetUserProfiles(): void {
+        const username = this.userProfileService.getUsername();
+        if (username) {
+            this.userProfileService.getUserProfiles(username);
+        }
     }
 }
