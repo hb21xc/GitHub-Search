@@ -5,6 +5,6 @@ export class DeviceService {
 
     // TODO import https://github.com/maciej-gurban/responsive-bootstrap-toolkit
     isSmartphone() {
-        return window.innerWidth < 576;
+        return window.innerWidth < 768;
     }
 }
